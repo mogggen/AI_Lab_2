@@ -1,0 +1,123 @@
+﻿S0006D, Datorspels AI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Laborationsrapport
+
+
+
+
+
+
+
+
+
+
+S0006D, Datorspels AI
+Laboration: 1
+Harry Hedman
+harhed-9@student.ltu.se
+Källkod: https://github.com/sweapan/AI_Labb1 
+2021-01-31
+________________
+
+
+
+
+Problemspecifikation        1
+Användarhandledning        2
+Algoritmbeskrivning        3
+Systembeskrivning        4
+Lösningens begränsningar        5
+Diskussion        6
+Testkörningar        7
+
+
+________________
+
+
+Problemspecifikation
+Simulera ett enkelt liv för 4 agenter/inhabitants, dessa agenter ska kunna:
+1. jobba för pengar, 2 olika platser och former.
+2. köpa mat och vatten.
+3. sova.
+4. äta.
+5. dricka.
+6. umgås socialt med de andra agenterna.
+Varje agent är utrustad med varsin “mobiltelefon” som de använder för att kommunicera med varandra. De kan inte bli socialt tillfredsställda på egen hand och meddelar därför varandra när det går att umgås.
+Dessa krav gäller för betygsnivå 3 vilka jag anser mig uppnått.
+________________
+
+
+Användarhandledning
+Projektet finns på https://github.com/sweapan/AI_Labb1 
+I main.py finns en “updateTimer” variabel, ändra värdet på denna till ett mindre flytvärde (eller 0) om du vill att tiden ska gå fortare och vice versa.
+Ytterligare går det att ändra varje aktörs startnivå för pengar och energi där __init__ metoden kallas för “Inhabitant” för att testa olika scenarion. Detta förskjuter startpunkterna i de olika agenternas dagar. Maximal energinivå är 100 där minimum är 0. 
+________________
+Algoritmbeskrivning
+Varje agent bestämmer sina handlingar baserat på vad som är viktigast just nu. I fallet att någon av handlingarna blir brådskande, avbryts den pågående handlingen.
+________________
+
+
+Systembeskrivning
+Systemet består av en Finite State Machine (FSM), en Inhabitant klass, en Inhabitant Handler/Manager och en Message Handler/Manager. I main funktionen skapas alla inhabitants och därför kräver main tillgång till Inhabitant och FSM då konstruktorn för Inhabitant kräver en default work state.
+Inhabitant Handler använder FSM för att kunna returnera vilka inhabitants som befinner sig på samma plats.
+Message Handler behöver Inhabitant Handler för att hitta rätt inhabitant att skicka meddelande till.
+Inhabitant nyttjar Inhabitant Handler för att skicka meddelanden till alla andra när det är dags att umgås, alla meddelanden skickas till Message Handlern som sedan distribuerar ut dessa till rätt agent.
+  
+
+Figur 1. Beroenden mellan olika block (filer).
+________________
+Lösningens begränsningar
+Inga testningseffektiva funktioner är implementerade vilket innebär att, för varje test måste man ändra värden i källkoden och sedan starta om. 
+Eftersom att lösningen inte beskrivs grafiskt krävdes inga avstånd, detta strider dock mot trovärdigheten av simuleringen.
+Agenterna kan inte bestämma en särskild tid eller plats att umgås på. 
+________________
+
+
+Diskussion
+Det har inte uppkommit några större nämnvärda problem lyckligtvis nog. De problem som uppstått har mest kommit fram till följd av att jag glömt bort hur Python fungerar, men dessa gick ofta snabbt att lösa med lite googling. Om det var något svårare att förstå eller att hitta bad jag Magnus Lind om hjälp, tack Magnus!
+Laborationen var väldigt kul att genomföra, det kändes inte för svårt men ändå som att de koncept man nyttjade är väldigt användbara och bra att kunna.
+________________
+
+
+Testkörningar
+Tester har körts i två fall:
+1. Två agenter som jobbar på “Quarry” och två andra som jobbar på “Office”. Alla agenter startar med 0 pengar men 100 (max) i alla andra egenskaper. I detta fall betedde sig de agenterna på respektive jobb exakt likadant.
+2. Två agenter på “Quarry” varav en jobbar nattskift samt två andra på “Office” varav en jobbar nattskift. “Nattskift” innebär då att agenten startar med 30 pengar och noll i energinivå, det betyder då att dessa startar dagen med att sova. På “Office” blir resultaten ganska lika, arbetaren på nattskift har lite mindre mat och pengar. Däremot, på “Quarry” närmar sig nattskift-arbetarens matförråd dubbla den andres. Deras pengar närmar sig lika mängd. Vad som skapar detta beteende är oklart.
+
+
+13
