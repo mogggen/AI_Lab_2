@@ -75,34 +75,31 @@ def graph(karta):
     graph = {}
     x = 0
     y = 0
+    #create grid
     for k in karta:
-        x += 1
         if k == '\n':
             x = 0
             y += 1
-        else:
+        elif k == '0' or k == ' ':
             graph[(x, y)] = k
-    return graph
+##            for i in range(9):
+##                if i == 4: continue
+##                x + i % 3 - 1, y + i / 3 - 1
+            x += 1
 
-print(graph(kartor[0]))
-nodes = graph(kartor[0])
+    x = 0
+    y = 0
+
+#nodes = graph(kartor[0])
+#for y in range(16):
+    #for x in range(16):
+        #print(nodes[(x, y)], end='')
+#    print()
 drawMap(kartor[0], (-300, -280))
 
-found = False
-def DFS(pos, nodes):
-    global found
-    if nodes[pos] == "G": found = True
-    if nodes[pos] == "X" or found:
-        return
-    DFS((x + 1, y - 1), nodes) # 3
-    DFS((x + 1, y), nodes) # 6
-    DFS((x, y - 1), nodes) # 2
-    DFS((x - 1, y - 1), nodes) # 1
-    DFS((x + 1, y + 1), nodes) # 9
-    DFS((x, y + 1), nodes) # 8
-    DFS((x - 1, y), nodes) # 4
-    DFS((x - 1, y + 1), nodes) # 7
-        
-DFS((1, 1), nodes)
-#drawMap(kartor[1], (200, -280))
-#drawMap(kartor[2], (0, 100))
+##for y in range(16):
+##        for x in range(16):
+##            print(nodes[(x, y)], end='')
+##        print()
+drawMap(kartor[1], (200, -280))
+drawMap(kartor[2], (0, 100))
