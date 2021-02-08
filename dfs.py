@@ -1,28 +1,64 @@
-def dfs(visited, graph, node):
+import turtle
+
+s = 10
+
+def rect(p, place="", size = s):
+    tur = turtle.Turtle()
+    
+    #setters
+    tur.ht()
+    tur.up()
+    tur.speed(0)
+    for i in p:
+        x = i[0] * s + s
+        y = i[1] * -s
+        c = i[2]
+        
+        #continue
+        tur.fillcolor("gray")
+
+        #position
+        tur.goto(x - size / 2, y - size / 2)
+
+        #fill rec
+        tur.begin_fill()
+        
+        tur.setx(x + size / 2)
+        tur.sety(y + size / 2)
+        tur.setx(x - size / 2)
+        tur.sety(y - size / 2)
+        tur.end_fill()
+
+#flags
+
+
+def dfs(visited, graph, node, first = True, Found = False, counter = 0):
+    if first:
+        Found = False
+        counter = 0
+        first = False
+
+    counter += 1
+    if graph[node][0] == "G": Found = True
+    if graph[node][0] == "X" or Found: return
+    rect([(node[0], node[1], "Dummy")])
     if node not in visited:
-        print (node)
         visited.add(node)
-        for neighbour in graph[node]:
-            dfs(visited, graph, neighbour)
+        
+        for neighbour in graph[node][1:]:
+            dfs(visited, graph, neighbour, first, Found, counter)
+    return counter
 
-found = False
-visited = []
-def DFS(pos, nodes):
-    global found
-    global visited
-    if nodes[pos] == "G": found = True
-    if nodes[pos] == "X" or found:
-        return
-    visited += nodes[pos]
-    x = pos[0]
-    y = pos[1]
-    DFS((x + 1, y - 1), nodes) # 3
-    DFS((x + 1, y), nodes) # 6
-    DFS((x, y - 1), nodes) # 2
-    DFS((x - 1, y - 1), nodes) # 1
-    DFS((x + 1, y + 1), nodes) # 9
-    DFS((x, y + 1), nodes) # 8
-    DFS((x - 1, y), nodes) # 4
-    DFS((x - 1, y + 1), nodes) # 7
+queue = []
 
-#DFS((1, 1), nodes)
+def bfs(visited, graph, node):
+  visited.append(node)
+  queue.append(node)
+
+  while queue:
+    h = queue.pop(0) 
+
+    for neighbour in graph[h][1:]:
+      if neighbour not in visited:
+        visited.append(neighbour)
+        queue.append(neighbour)
