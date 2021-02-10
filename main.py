@@ -85,7 +85,7 @@ def makeGraph(karta):
     return graph
 
 def connectGraph(graph):
-    r = [(1, 1), (1, 0), (0, 1), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1)]
+    r = [(1, 1), (0, 1), (1, 0), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1)]
     
     for g in graph:
         for n in r:
@@ -102,13 +102,17 @@ def drawDFS(karta):
     drawMap(karta)
     g = makeGraph(karta)
     g = connectGraph(g)
-    visited = set()
+
+    visited = []
+    dfs.resetFlags()
 
     #find S
     for v in g:
         if g[v][0] == "S":
             print("DFS: ", dfs.dfs(visited, g, v), "function calls")
             break
+    tur.write("Press 'Enter' in console to contiue...")
+    input()
 
 def drawBFS(karta):
     tur = turtle.Turtle()
@@ -116,13 +120,18 @@ def drawBFS(karta):
     drawMap(karta)
     g = makeGraph(karta)
     g = connectGraph(g)
+    dfs.resetFlags()
+
+    visited = []
     
     #find S
     for v in g:
         if g[v][0] == "S":
-            print("BFS: ", dfs.bfs([], g, v), "function calls")
+            print("BFS: ", dfs.bfs(visited, g, v), "function calls")
             break
+    tur.write("Press 'Enter' in console to contiue...")
+    input()
 
 #driver code
-for i in kartor[:-2]: #this needs to be an array, not a index
-    input(drawDFS(i))
+for i in kartor: #this needs to be an array, not a index
+    drawDFS(i)

@@ -29,36 +29,52 @@ def rect(p, place="", size = s):
         tur.sety(y - size / 2)
         tur.end_fill()
 
+
+
 #flags
+Found = False
+counter = 0
 
+def resetFlags():
+    global Found
+    global counter
+    Found = False
+    counter = 0
+    
 
-def dfs(visited, graph, node, first = True, Found = False, counter = 0):
-    if first:
-        Found = False
-        counter = 0
-        first = False
-
+def dfs(visited, graph, node):
+    global Found
+    global counter
     counter += 1
     if graph[node][0] == "G": Found = True
     if graph[node][0] == "X" or Found: return
-    rect([(node[0], node[1], "Dummy")])
+    rect([(node[0], node[1], "T")])
     if node not in visited:
-        visited.add(node)
+        visited.append(node)
         
         for neighbour in graph[node][1:]:
-            dfs(visited, graph, neighbour, first, Found, counter)
+            dfs(visited, graph, neighbour)
     return counter
 
 queue = []
 
 def bfs(visited, graph, node):
-  visited.append(node)
-  queue.append(node)
+    global Found
+    global counter
+    counter += 1
+    if graph[node][0] == "G": Found = True
+    if graph[node][0] == "X" or Found: return
+    rect([(node[0], node[1], "T")])
+    visited.append(node)
+    queue.append(node)
 
-  while queue:
-    h = queue.pop(0) 
+    while queue:
+        print(queue)
+        h = queue.pop(0) 
 
     for neighbour in graph[h][1:]:
-      if neighbour not in visited:
-        visited.append(neighbour)
-        queue.append(neighbour)
+        #print(graph[h])
+        if neighbour not in visited:
+            visited.append(neighbour)
+            queue.append(neighbour)
+    return counter
