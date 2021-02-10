@@ -1,4 +1,3 @@
-import node
 import dfs
 import turtle
 
@@ -109,7 +108,7 @@ def drawDFS(karta):
     #find S
     for v in g:
         if g[v][0] == "S":
-            print("DFS: ", dfs.dfs(visited, g, v), "function calls")
+            print("DFS: ", dfs.dfs(visited, g, v), "function calls", end='')
             break
     tur.write("Press 'Enter' in console to contiue...")
     input()
@@ -120,14 +119,14 @@ def drawBFS(karta):
     drawMap(karta)
     g = makeGraph(karta)
     g = connectGraph(g)
-    dfs.resetFlags()
-
+    
     visited = []
+    dfs.resetFlags()
     
     #find S
     for v in g:
         if g[v][0] == "S":
-            print("BFS: ", dfs.bfs(visited, g, v), "function calls")
+            print("BFS: ", dfs.bfs(visited, g, v), "function calls", end='')
             break
     tur.write("Press 'Enter' in console to contiue...")
     input()
@@ -135,3 +134,4 @@ def drawBFS(karta):
 #driver code
 for i in kartor: #this needs to be an array, not a index
     drawDFS(i)
+    drawBFS(i)

@@ -10,6 +10,7 @@ def rect(p, place="", size = s):
     tur.up()
     tur.speed(0)
     for i in p:
+        if i[2] in (" ", "0"): continue
         x = i[0] * s + s
         y = i[1] * -s
         c = i[2]
@@ -29,17 +30,23 @@ def rect(p, place="", size = s):
         tur.sety(y - size / 2)
         tur.end_fill()
 
+    if place:
+        tur.write(place)
+
 
 
 #flags
 Found = False
 counter = 0
+queue = []
 
 def resetFlags():
     global Found
     global counter
     Found = False
     counter = 0
+    queue = []
+    
     
 
 def dfs(visited, graph, node):
@@ -56,15 +63,13 @@ def dfs(visited, graph, node):
             dfs(visited, graph, neighbour)
     return counter
 
-queue = []
-
 def bfs(visited, graph, node):
     global Found
     global counter
     counter += 1
     if graph[node][0] == "G": Found = True
     if graph[node][0] == "X" or Found: return
-    rect([(node[0], node[1], "T")])
+    
     visited.append(node)
     queue.append(node)
 
@@ -77,4 +82,6 @@ def bfs(visited, graph, node):
         if neighbour not in visited:
             visited.append(neighbour)
             queue.append(neighbour)
-    return counter
+            rect([(neighbour[0], neighbour[1], "T")])
+    if not queue:
+        return counter
