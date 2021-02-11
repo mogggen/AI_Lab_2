@@ -1,10 +1,11 @@
-import dfs
+import algo
 import turtle
+import time
 
 s = 10
 
 #destination
-def rect(p, place="", size = s):
+def rect(p):
     tur = turtle.Turtle()
     
     #setters
@@ -12,28 +13,28 @@ def rect(p, place="", size = s):
     tur.up()
     tur.speed(0)
     for i in p:
+        #print(i)
         if i[2] in (" ", "0"): continue
         x = i[0]
         y = i[1]
         c = i[2]
+        w = i[3]
+        h = i[4]
         
         #continue
         tur.fillcolor(getColor(c))
 
         #position
-        tur.goto(x - size / 2, y - size / 2)
+        tur.goto(x - h / 2, y - h / 2)
 
         #fill rec
         tur.begin_fill()
         
-        tur.setx(x + size / 2)
-        tur.sety(y + size / 2)
-        tur.setx(x - size / 2)
-        tur.sety(y - size / 2)
+        tur.setx(x + w / 2)
+        tur.sety(y + h / 2)
+        tur.setx(x - w / 2)
+        tur.sety(y - h / 2)
         tur.end_fill()
-        
-    if place:
-        tur.write(place)
 
 foo = open("Map1.txt", 'r')
 
@@ -51,21 +52,32 @@ def getColor(c):
     elif c == ' ' or c == '0':
         return "black"
     else:
-        return "unknown token"
+        return "Unknown token"
 
 def drawMap(karta):
     global s
     nodes = []
     x = 0
     y = 0
+    last = ''
+    w = 0
     
     for c in karta:
-        x += s
-        if c == '\n':
-            x = 0
-            y -= s
+        print(last,end='')
+        if last != c:
+            if c == '\n':
+                nodes += [(x, y, last, w, s)]
+                x = 0
+                w = 0
+                y -= s
+                last = c
+            else:
+                nodes += [(x, y, c, w, s)]
+                last = c
+                x = x + w
+                w = 0
         else:
-            nodes += [(x, y, c)]
+            w += s       
     rect(nodes)
     return nodes
 
@@ -95,7 +107,7 @@ def connectGraph(graph):
                 continue
     return graph
 
-def drawDFS(karta):
+def drawfunc(karta, func):
     tur = turtle.Turtle()
     tur.screen.clear()    
     drawMap(karta)
@@ -103,35 +115,24 @@ def drawDFS(karta):
     g = connectGraph(g)
 
     visited = []
-    dfs.resetFlags()
+    algo.resetFlags()
 
     #find S
     for v in g:
         if g[v][0] == "S":
-            print("DFS: ", dfs.dfs(visited, g, v), "function calls", end='')
-            break
+            if func == "dfs":
+                algo.dfs(visited, g, v)
+            elif func == "bfs":
+                algo.bfs(visited, g, v)
     tur.write("Press 'Enter' in console to contiue...")
-    input()
 
-def drawBFS(karta):
-    tur = turtle.Turtle()
-    tur.screen.clear()    
-    drawMap(karta)
-    g = makeGraph(karta)
-    g = connectGraph(g)
-    
-    visited = []
-    dfs.resetFlags()
-    
-    #find S
-    for v in g:
-        if g[v][0] == "S":
-            print("BFS: ", dfs.bfs(visited, g, v), "function calls", end='')
-            break
-    tur.write("Press 'Enter' in console to contiue...")
-    input()
+def timefunc(karta, func, itr = 1000):    
+    print(func)
 
 #driver code
 for i in kartor: #this needs to be an array, not a index
-    drawDFS(i)
-    drawBFS(i)
+    drawfunc(i, "dfs")
+    drawfunc(i, "bfs")
+    
+    #timefunc(i, "dfs")
+    #timefunc(i, "bfs")

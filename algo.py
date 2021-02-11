@@ -1,6 +1,6 @@
 import turtle
 
-s = 10
+s = 5
 
 def rect(p, place="", size = s):
     tur = turtle.Turtle()
@@ -43,6 +43,7 @@ queue = []
 def resetFlags():
     global Found
     global counter
+    global queue
     Found = False
     counter = 0
     queue = []
@@ -61,27 +62,19 @@ def dfs(visited, graph, node):
         
         for neighbour in graph[node][1:]:
             dfs(visited, graph, neighbour)
-    return counter
+    return #len(visited)
 
 def bfs(visited, graph, node):
-    global Found
-    global counter
-    counter += 1
-    if graph[node][0] == "G": Found = True
-    if graph[node][0] == "X" or Found: return
-    
+
     visited.append(node)
     queue.append(node)
 
     while queue:
-        print(queue)
         h = queue.pop(0) 
-
-    for neighbour in graph[h][1:]:
-        #print(graph[h])
-        if neighbour not in visited:
-            visited.append(neighbour)
-            queue.append(neighbour)
-            rect([(neighbour[0], neighbour[1], "T")])
-    if not queue:
-        return counter
+        for neighbour in graph[h][1:]:
+            if neighbour not in visited:
+                visited.append(neighbour)
+                if graph[neighbour][0] != "X":
+                    queue.append(neighbour)
+                if graph[neighbour][0] == "G": return #len(visited)
+                rect([(neighbour[0], neighbour[1], "T")])
