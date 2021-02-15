@@ -101,7 +101,7 @@ def drawfunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
 
-    algo.setAlgoType(True)
+    algo.showSearch(True)
     algo.resetFlags()
 
     #find S
@@ -122,7 +122,7 @@ def timefunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
     
-    algo.setAlgoType(False)
+    algo.showSearch(False)
     algo.resetFlags()
     
     #find S
@@ -150,11 +150,11 @@ def timefunc(karta, func):
 #driver code
 itr = 4000
 for i in enumerate(kartor):
-    print("Map" + str(i[0] + 1) + ".txt")
-    #drawfunc(i[1], "dfs")
-    #drawfunc(i[1], "bfs")
+    print("Map" + str(i[0] + 1))
+    drawfunc(i[1], "dfs")
+    drawfunc(i[1], "bfs")
     drawfunc(i[1], "A*")
-    #drawfunc(i[1], "custom")
+    drawfunc(i[1], "custom")
     
     dfsTime = 0
     bfsTime = 0
@@ -162,7 +162,6 @@ for i in enumerate(kartor):
     customTime = 0
 
     for it in range(itr):
-        break
         dfsTime += timefunc(i[1], "dfs")
         bfsTime += timefunc(i[1], "bfs")
         AstarTime += timefunc(i[1], "A*")

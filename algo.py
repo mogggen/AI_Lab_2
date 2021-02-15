@@ -29,8 +29,6 @@ def rect(p):
         tur.sety(y - s / 2)
         tur.end_fill()    
 
-
-
 #flags
 Found = False
 draw = False
@@ -49,7 +47,7 @@ def resetFlags():
     visited = []
     queue = []
     
-def setAlgoType(boolean):
+def showSearch(boolean):
     global draw
     draw = boolean
 
@@ -90,12 +88,11 @@ def astar(graph, node, end, g = 0, par = None):
         visited.append(node)
         g + 1
         improved = {}
-        for neighbour in graph[node][1:]: #let's hope that astar finds a decent path instantly and don't backtrack trough parent, otherwise use 'if is parent' guard parameter to give it g - 1. But this should really never occur because if it looked through all the neighbours, it should return to a more sane path without having to check the values, the algo don't need a carrot to go back.            
+        for neighbour in graph[node][1:]:
             improved[g + (neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2] = neighbour
         ud = improved
-        improved = dict(sorted(ud.items(), reverse=False))
-        print(improved)
-        #- 1 + 2 * (par == neighbour)
+        improved = dict(sorted(ud.items()))
+        
         for best in improved:
             astar(graph, improved[best], end, g, node)
 
