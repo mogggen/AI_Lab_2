@@ -83,12 +83,12 @@ def makeGraph(karta):
     return graph
 
 def connectGraph(graph):
-    r = [(1, 1), (0, 1), (1, 0), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1)]
+    r = ((1, 1), (0, 1), (1, 0), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1))
     
     for g in graph:
         for n in r:
             try:
-                if "X" not in (graph[g[0] + n[0], g[1]][0], graph[g[0], g[1] + n[1]][0]) and graph[g[0] + n[0], g[1] + n[1]][0] in ('0', ' ', 'S', 'G'):
+                if "X" not in (graph[g[0] + n[0], g[1]][0], graph[g[0], g[1] + n[1]][0], graph[g[0] + n[0], g[1] + n[1]][0]):
                     graph[g] += [(g[0] + n[0], g[1] + n[1])]
             except KeyError:
                 continue
@@ -101,6 +101,7 @@ def drawfunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
 
+    algo.setAlgoType(True)
     algo.resetFlags()
 
     #find S
@@ -114,11 +115,14 @@ def drawfunc(karta, func):
                 for vv in g:
                     if g[vv][0] == "G":
                         algo.astar(g, v, vv)
+            elif func == "custom":
+                algo.custom(g, v)
 
-def timefunc(karta, func, itr = 1000):
+def timefunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
     
+    algo.setAlgoType(False)
     algo.resetFlags()
     
     #find S
@@ -133,17 +137,23 @@ def timefunc(karta, func, itr = 1000):
                 algo.bfs(g, v)
                 return time.time() - start
             elif func == "A*":
+                #find G
                 for vv in g:
                     if g[vv][0] == "G":
                         start = time.time()
                         algo.astar(g, v, vv)
                         return time.time() - start
+            elif func == "custom":
+                start = time.time()
+                algo.custom(g, v)
+                return time.time() - start
 #driver code
+itr = 4000
 for i in enumerate(kartor):
     print("Map" + str(i[0] + 1) + ".txt")
     #drawfunc(i[1], "dfs")
     #drawfunc(i[1], "bfs")
-    #drawfunc(i[1], "A*")
+    drawfunc(i[1], "A*")
     #drawfunc(i[1], "custom")
     
     dfsTime = 0
@@ -151,14 +161,14 @@ for i in enumerate(kartor):
     AstarTime = 0
     customTime = 0
 
-    for itr in range(4000):
-        pass
+    for it in range(itr):
+        break
         dfsTime += timefunc(i[1], "dfs")
         bfsTime += timefunc(i[1], "bfs")
-        #AstarTime += timefunc(i[1], "A*")
+        AstarTime += timefunc(i[1], "A*")
         customTime += timefunc(i[1], "custom")
 
-    print("dfs:", dfsTime / 1000)
-    print("bfs:", bfsTime / 1000)
-    #print("A*:", AstarTime / 1000)
-    print("custom:", customTime / 1000)
+    print("dfs:", dfsTime / itr)
+    print("bfs:", bfsTime / itr)
+    print("A*:", AstarTime / itr)
+    print("custom:", customTime / itr)
