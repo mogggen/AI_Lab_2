@@ -1,16 +1,15 @@
-import turtle
+from turtle import Turtle, Screen
 
 s = 10
 
 def rect(p):
-    tur = turtle.Turtle()
+    tur = Turtle()
     
     #setters
     tur.ht()
     tur.up()
     tur.speed(0)
     for i in p:
-        if i[2] in (" ", "0"): continue
         x = i[0] * s
         y = i[1] * -s
         
@@ -48,7 +47,7 @@ def showSearch(boolean):
 
 def dfs(graph, node):
     global path
-    if draw: path += rect((node[0], node[1]))
+    if draw: path += rect([(node[0], node[1])])
     if graph[node][0] == "G": return path
     
     if node not in visited:
@@ -77,7 +76,7 @@ def bfs(graph, node):
     
 def astar(graph, node, end, g = 0, par = None):
     global path
-    if draw: path += rect((node[0], node[1]))
+    if draw: path += rect([(node[0], node[1])])
     if not node[0] - end[0] + node[1] - end[1]: return path
     
     if node not in visited:
@@ -94,7 +93,7 @@ def astar(graph, node, end, g = 0, par = None):
 
 def custom(graph, node):
     global path
-    if draw: path += rect((node[0], node[1]))
+    if draw: path += rect([(node[0], node[1])])
     if graph[node][0] == "G": return path
     if node not in visited:
         visited.append(node)

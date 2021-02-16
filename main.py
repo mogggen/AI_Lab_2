@@ -1,12 +1,12 @@
 import algo
-import turtle
+from turtle import Turtle, Screen
 import time
 
 s = 10
 
 #destination
 def rect(p):
-    tur = turtle.Turtle()
+    tur = Turtle()
     
     #setters
     tur.ht()
@@ -61,8 +61,6 @@ def drawMap(karta):
         else:
             nodes += [(x, y, c)]
             x += s
-        
-    rect(nodes)
     return nodes
 
 def makeGraph(karta):
@@ -92,15 +90,17 @@ def connectGraph(graph):
     return graph
 
 def drawfunc(karta, func):
-    tur = turtle.Turtle()
-    tur.screen.clear()
-    drawMap(karta)
+    screen = Screen()   
+    screen.clear()
+    screen.tracer(0, 0)
+    rect(drawMap(karta))
+    screen.update()
     g = makeGraph(karta)
     g = connectGraph(g)
 
     algo.showSearch(True)
     algo.resetFlags()
-
+    input()
     #find S
     for v in g:
         if g[v][0] == "S":
@@ -114,6 +114,7 @@ def drawfunc(karta, func):
                         algo.astar(g, v, vv)
             elif func == "custom":
                 algo.custom(g, v)
+    screen.update()
 
 def timefunc(karta, func):
     g = makeGraph(karta)
