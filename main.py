@@ -148,7 +148,7 @@ def timefunc(karta, func):
                 algo.custom(g, v)
                 return time.time() - start
 #driver code
-itr = 4000
+itr = 100
 for i in enumerate(kartor):
     print("Map" + str(i[0] + 1))
     drawfunc(i[1], "dfs")
@@ -167,7 +167,7 @@ for i in enumerate(kartor):
         AstarTime += timefunc(i[1], "A*")
         customTime += timefunc(i[1], "custom")
 
-    print("dfs:", dfsTime / itr)
-    print("bfs:", bfsTime / itr)
-    print("A*:", AstarTime / itr)
-    print("custom:", customTime / itr)
+    print(dfsTime / itr)
+    print(bfsTime / itr)
+    print(AstarTime / itr)
+    print(customTime / itr)
