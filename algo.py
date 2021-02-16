@@ -27,35 +27,29 @@ def rect(p):
         tur.sety(y + s / 2)
         tur.setx(x - s / 2)
         tur.sety(y - s / 2)
-        tur.end_fill()    
+        tur.end_fill()
+    return x, y   
 
 #flags
-Found = False
 draw = False
 visited = []
-
-queue = []
+path = []
 
 
 def resetFlags():
-    global Found
     global visited
-    global queue
-    
-    Found = False
-
+    global path
     visited = []
-    queue = []
+    path = []   
     
 def showSearch(boolean):
     global draw
     draw = boolean
 
 def dfs(graph, node):
-    global Found
-    if graph[node][0] == "G": Found = True
-    if graph[node][0] == "X" or Found: return
-    if draw: rect([(node[0], node[1], "T")])
+    global path
+    if draw: path += rect((node[0], node[1]))
+    if graph[node][0] == "G": return path
     
     if node not in visited:
         visited.append(node)
@@ -65,24 +59,26 @@ def dfs(graph, node):
     return
 
 def bfs(graph, node):
+    global path
+    queue = []
+
     visited.append(node)
     queue.append(node)
 
     while queue:
-        h = queue.pop(0) 
+        h = queue.pop(0)
+        if draw: path += rect([(h[0], h[1])])
         for neighbour in graph[h][1:]:
             if neighbour not in visited:
                 visited.append(neighbour)
                 if graph[neighbour][0] != "X":
                     queue.append(neighbour)
                 if graph[neighbour][0] == "G": return
-                if draw: rect([(neighbour[0], neighbour[1], "T")])
     
 def astar(graph, node, end, g = 0, par = None):
-    global Found
-    if not node[0] - end[0] + node[1] - end[1]: Found = True
-    if graph[node][0] == "X" or Found: return
-    if draw: rect([(node[0], node[1], "T")])
+    global path
+    if draw: path += rect((node[0], node[1]))
+    if not node[0] - end[0] + node[1] - end[1]: return path
     
     if node not in visited:
         visited.append(node)
@@ -97,10 +93,9 @@ def astar(graph, node, end, g = 0, par = None):
             astar(graph, improved[best], end, g, node)
 
 def custom(graph, node):
-    global Found
-    if graph[node][0] == "G": Found = True
-    if graph[node][0] == "X" or Found: return
-    if draw: rect([(node[0], node[1], "T")])
+    global path
+    if draw: path += rect((node[0], node[1]))
+    if graph[node][0] == "G": return path
     if node not in visited:
         visited.append(node)
         

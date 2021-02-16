@@ -16,10 +16,9 @@ def rect(p):
         if i[2] in (" ", "0"): continue
         x = i[0]
         y = i[1]
-        c = i[2]
         
         #continue
-        tur.fillcolor(getColor(c))
+        tur.fillcolor(getColor(i[2]))
 
         #position
         tur.goto(x - s / 2, y - s / 2)
@@ -46,8 +45,6 @@ def getColor(c):
         return "red"
     elif c == 'G':
         return "green"
-    elif c == ' ' or c == '0':
-        return "black"
     else:
         return "Unknown token"
 
