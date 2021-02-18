@@ -3,6 +3,8 @@ from turtle import Turtle, Screen
 import time
 
 s = 10
+screen = Screen()
+screen.tracer(0, 0)
 
 #destination
 def rect(p):
@@ -31,6 +33,7 @@ def rect(p):
         tur.setx(x - s / 2)
         tur.sety(y - s / 2)
         tur.end_fill()
+    screen.update()
 
 foo = open("Map1.txt", 'r')
 
@@ -90,7 +93,7 @@ def connectGraph(graph):
     return graph
 
 def drawfunc(karta, func):
-    screen = Screen()   
+    global screen
     screen.clear()
     screen.tracer(0, 0)
     rect(drawMap(karta))
@@ -100,7 +103,7 @@ def drawfunc(karta, func):
 
     algo.showSearch(True)
     algo.resetFlags()
-    input()
+    
     #find S
     for v in g:
         if g[v][0] == "S":
@@ -114,7 +117,6 @@ def drawfunc(karta, func):
                         algo.astar(g, v, vv)
             elif func == "custom":
                 algo.custom(g, v)
-    screen.update()
 
 def timefunc(karta, func):
     g = makeGraph(karta)
@@ -150,10 +152,14 @@ itr = 100
 for i in enumerate(kartor):
     print("Map" + str(i[0] + 1))
     drawfunc(i[1], "dfs")
+    input()
     drawfunc(i[1], "bfs")
+    input()
     drawfunc(i[1], "A*")
+    input()
     drawfunc(i[1], "custom")
-    
+    input()
+
     dfsTime = 0
     bfsTime = 0
     AstarTime = 0
