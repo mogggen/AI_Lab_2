@@ -48,6 +48,8 @@ def getColor(c):
         return "red"
     elif c == 'G':
         return "green"
+    elif c == 'P':
+        return "yellow"
     else:
         return "Unknown token"
 
@@ -76,7 +78,7 @@ def makeGraph(karta):
             x = 0
             y += 1
         else:
-            graph[(x, y)] = [k]
+            graph[x, y] = [k]
             x += 1
     return graph
 
@@ -108,15 +110,19 @@ def drawfunc(karta, func):
     for v in g:
         if g[v][0] == "S":
             if func == "dfs":
-                algo.dfs(g, v)
+                tem = algo.dfs(g, v)
+                for ss in range(len(tem)):
+                    tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
+                rect(tem)
+                return tem
             elif func == "bfs":
-                algo.bfs(g, v)
+                return algo.bfs(g, v)
             elif func == "A*":
                 for vv in g:
                     if g[vv][0] == "G":
-                        algo.astar(g, v, vv)
+                        return algo.astar(g, v, vv)
             elif func == "custom":
-                algo.custom(g, v)
+                return algo.custom(g, v)
 
 def timefunc(karta, func):
     g = makeGraph(karta)
@@ -147,18 +153,19 @@ def timefunc(karta, func):
                 start = time.time()
                 algo.custom(g, v)
                 return time.time() - start
+
 #driver code
 itr = 100
 for i in enumerate(kartor):
-    print("Map" + str(i[0] + 1))
-    drawfunc(i[1], "dfs")
-    input()
-    drawfunc(i[1], "bfs")
-    input()
-    drawfunc(i[1], "A*")
-    input()
-    drawfunc(i[1], "custom")
-    input()
+    print("Map " + str(i[0] + 1))
+
+    #input(drawfunc(i[1], "dfs"))
+    
+    input(drawfunc(i[1], "bfs"))
+    
+    #input(drawfunc(i[1], "A*"))
+    
+    #input(drawfunc(i[1], "custom"))
 
     dfsTime = 0
     bfsTime = 0
@@ -166,6 +173,7 @@ for i in enumerate(kartor):
     customTime = 0
 
     for it in range(itr):
+        break
         dfsTime += timefunc(i[1], "dfs")
         bfsTime += timefunc(i[1], "bfs")
         AstarTime += timefunc(i[1], "A*")
