@@ -70,9 +70,12 @@ def bfs(graph, node):
                 visited.append(neighbour)
                 queue.append(neighbour + (path,))
                 if graph[neighbour][0] == "G":
-                    print(queue[-1])    
-                    #print(path)
-                    return
+                    tem = []
+                    temp = queue[-1]
+                    while temp:
+                        tem += [(temp[0], temp[1])]
+                        temp = temp[2]
+                    return tem[::-1]
     
 def astar(graph, node, end, g = 0):
     if node == end: return [node]

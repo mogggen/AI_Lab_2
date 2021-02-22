@@ -107,30 +107,25 @@ def drawfunc(karta, func):
     algo.resetFlags()
     
     #find S
+    tem = []
     for v in g:
         if g[v][0] == "S":
             if func == "dfs":
                 tem = algo.dfs(g, v)
-                for ss in range(len(tem)):
-                    tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
-                rect(tem)
-                return tem
+                
             elif func == "bfs":
-                return algo.bfs(g, v)
+                tem = algo.bfs(g, v)
             elif func == "A*":
                 for vv in g:
                     if g[vv][0] == "G":
                         tem = algo.astar(g, v, vv)
-                        for ss in range(len(tem)):
-                            tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
-                        rect(tem)
-                        return tem
             elif func == "custom":
                 tem = algo.custom(g, v)
-                for ss in range(len(tem)):
-                    tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
-                rect(tem)
-                return tem
+
+    for ss in range(len(tem)):
+        tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
+    rect(tem)
+    return tem
 
 def timefunc(karta, func):
     g = makeGraph(karta)
@@ -166,13 +161,21 @@ itr = 100
 for i in enumerate(kartor):
     print("Map " + str(i[0] + 1))
 
-    #input(drawfunc(i[1], "dfs"))
+    print("Depth-First-Search")
+    drawfunc(i[1], "dfs")
+    input()
     
-    #input(drawfunc(i[1], "bfs"))
+    print("Bredth-First-Search")
+    drawfunc(i[1], "bfs")
+    input()
     
-    input(drawfunc(i[1], "A*"))
+    print("A*")
+    drawfunc(i[1], "A*")
+    input()
     
-    #input(drawfunc(i[1], "custom"))
+    print("custom Algorithm")
+    drawfunc(i[1], "custom")
+    input()
 
     dfsTime = 0
     bfsTime = 0
@@ -180,13 +183,13 @@ for i in enumerate(kartor):
     customTime = 0
 
     for it in range(itr):
-        break
         dfsTime += timefunc(i[1], "dfs")
         bfsTime += timefunc(i[1], "bfs")
         AstarTime += timefunc(i[1], "A*")
         customTime += timefunc(i[1], "custom")
-
+    
     print(dfsTime / itr)
     print(bfsTime / itr)
     print(AstarTime / itr)
     print(customTime / itr)
+    input()
