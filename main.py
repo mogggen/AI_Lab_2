@@ -100,9 +100,9 @@ def drawfunc(karta, func):
     screen.tracer(0, 0)
     rect(drawMap(karta))
     screen.update()
+
     g = makeGraph(karta)
     g = connectGraph(g)
-
     algo.showSearch(True)
     algo.resetFlags()
     
@@ -120,14 +120,21 @@ def drawfunc(karta, func):
             elif func == "A*":
                 for vv in g:
                     if g[vv][0] == "G":
-                        return algo.astar(g, v, vv)
+                        tem = algo.astar(g, v, vv)
+                        for ss in range(len(tem)):
+                            tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
+                        rect(tem)
+                        return tem
             elif func == "custom":
-                return algo.custom(g, v)
+                tem = algo.custom(g, v)
+                for ss in range(len(tem)):
+                    tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
+                rect(tem)
+                return tem
 
 def timefunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
-    
     algo.showSearch(False)
     algo.resetFlags()
     
@@ -161,9 +168,9 @@ for i in enumerate(kartor):
 
     #input(drawfunc(i[1], "dfs"))
     
-    input(drawfunc(i[1], "bfs"))
+    #input(drawfunc(i[1], "bfs"))
     
-    #input(drawfunc(i[1], "A*"))
+    input(drawfunc(i[1], "A*"))
     
     #input(drawfunc(i[1], "custom"))
 

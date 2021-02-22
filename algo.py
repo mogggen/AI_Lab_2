@@ -58,8 +58,7 @@ def dfs(graph, node):
         if draw: rect(node)
         for neighbour in graph[node][1:]:
             isType = dfs(graph, neighbour)
-            if isType:
-                
+            if isType:    
                 return [node] + isType
         return []
     return []
@@ -79,35 +78,38 @@ def bfs(graph, node):
                 queue.append(neighbour)
                 if graph[neighbour][0] == "G": return
     
-def astar(graph, node, end, g = 0, par = None):
-    global Found
-    global path
-    if draw: path += rect(node)
-    if not node[0] - end[0] + node[1] - end[1]: Found = True
-    if Found: return path
+def astar(graph, node, end, g = 0):
+    if node == end: return [node]
     
     if node not in visited:
         visited.append(node)
-        g + 1
+        if draw: rect(node)
         improved = {}
         for neighbour in graph[node][1:]:
-            improved[g + (neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2] = neighbour
+            if neighbour in ((node[0], node[1] - 1), (node[0], node[1] + 1), (node[0] - 1, node[1]), (node[0] + 1, node[1])):
+                improved[g + 10 + ((neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2) * 10] = neighbour
+            else: improved[g + 14 + ((neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2) * 10] = neighbour
         ud = improved
         improved = dict(sorted(ud.items()))
         
         for best in improved:
-            astar(graph, improved[best], end, g, node)
+            isType = astar(graph, improved[best], end, g)
+            if isType:
+                return [node] + isType
+        return []
+    return[]
+            
 
 def custom(graph, node):
-    global Found
-    global path
-    if draw: path += rect(node)
-    if graph[node][0] == "G": Found = True
-    if Found: return path
-    if node not in visited and not Found:
+    if graph[node][0] == "G": return [node]
+    
+    if node not in visited:
         visited.append(node)
-        
+        if draw: rect(node)
         for neighbour in graph[node][1:]:
             if neighbour in ((node[0], node[1] - 1), (node[0], node[1] + 1), (node[0] - 1, node[1]), (node[0] + 1, node[1])):
-                custom(graph, neighbour)
-    return
+                isType = custom(graph, neighbour)
+                if isType:
+                    return [node] + isType
+        return []
+    return []
