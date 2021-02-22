@@ -33,18 +33,13 @@ def rect(p):
     return x, y   
 
 #flags
-Found = False
 draw = False
 visited = []
-#path = []
 
 
 def resetFlags():
-    global Found
     global visited
-    #global path
     visited = []
-    #path = []   
     
 def showSearch(boolean):
     global draw
@@ -64,19 +59,20 @@ def dfs(graph, node):
     return []
 
 def bfs(graph, node):
-    queue = []
-
-    visited.append(node)
-    queue.append(node)
-
+    node = node + (None,)
+    queue = [node]
     while queue:
         path = queue.pop(0)
+        
         if draw: rect(path)
-        for neighbour in graph[path][1:]:
+        for neighbour in graph[path[:-1]][1:]:
             if neighbour not in visited:
                 visited.append(neighbour)
-                queue.append(neighbour)
-                if graph[neighbour][0] == "G": return
+                queue.append(neighbour + (path,))
+                if graph[neighbour][0] == "G":
+                    print(queue[-1])    
+                    #print(path)
+                    return
     
 def astar(graph, node, end, g = 0):
     if node == end: return [node]
