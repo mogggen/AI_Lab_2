@@ -130,7 +130,7 @@ def drawfunc(karta, func):
 def timefunc(karta, func):
     g = makeGraph(karta)
     g = connectGraph(g)
-    algo.showSearch(False)
+    algo.drawSearch(False)
     algo.resetFlags()
     
     #find S
@@ -157,25 +157,28 @@ def timefunc(karta, func):
                 return time.time() - start
 
 #driver code
-itr = 100
+itr = 1000
 for i in enumerate(kartor):
     print("Map " + str(i[0] + 1))
 
-    print("Depth-First-Search")
+    #print("Depth-First-Search")
     drawfunc(i[1], "dfs")
-    input()
+    #input()
     
-    print("Bredth-First-Search")
-    drawfunc(i[1], "bfs")
-    input()
+    #print("Bredth-First-Search")
+    #drawfunc(i[1], "bfs")
+    #input()
     
     print("A*")
-    drawfunc(i[1], "A*")
-    input()
+    for it in range(itr):
+        start = time.time()
+        drawfunc(i[1], "A*")
+        print(time.time() - start)
+    #input()
     
-    print("custom Algorithm")
-    drawfunc(i[1], "custom")
-    input()
+    #print("custom Algorithm")
+    #drawfunc(i[1], "custom")
+    #input()
 
     dfsTime = 0
     bfsTime = 0
@@ -183,13 +186,14 @@ for i in enumerate(kartor):
     customTime = 0
 
     for it in range(itr):
+        break
         dfsTime += timefunc(i[1], "dfs")
         bfsTime += timefunc(i[1], "bfs")
         AstarTime += timefunc(i[1], "A*")
         customTime += timefunc(i[1], "custom")
     
-    print(dfsTime / itr)
-    print(bfsTime / itr)
-    print(AstarTime / itr)
-    print(customTime / itr)
-    input()
+    #print(dfsTime / itr)
+    #print(bfsTime / itr)
+    #print(AstarTime / itr)
+    #print(customTime / itr)
+    #input()

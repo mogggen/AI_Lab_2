@@ -41,7 +41,7 @@ def resetFlags():
     global visited
     visited = []
     
-def showSearch(boolean):
+def drawSearch(boolean):
     global draw
     draw = boolean
 
@@ -59,7 +59,7 @@ def dfs(graph, node):
     return []
 
 def bfs(graph, node):
-    node = node + (None,)
+    node += None,
     queue = [node]
     while queue:
         path = queue.pop(0)
@@ -77,22 +77,59 @@ def bfs(graph, node):
                         temp = temp[2]
                     return tem[::-1]
     
-def astar(graph, node, end, g = 0):
-    if node == end: return [node]
+def astar(graph, node):
+    goal = ()
+    for _ in graph:
+        if graph[_][0] == 'G': goal = _
+
+    node += None, 0, abs(goal[0] - node[0]) + abs(goal[1] - node[1])
+    openlist = []
+    closedlist = []
+
+    openlist.append(node)
+
+    while openlist:
+        current = min(openlist, key=lambda d:d[-2]+d[-1])
+        pos = current[:2]
+        par = current[2]
+        g, h = current[-2:]
+
+        if pos == goal:
+            path = []
+            while par:
+                path.append(pos)
+                current = par
+            path.append(pos)
+            return path[::-1]
+        
+        openlist.remove(current)
+        closedlist.append(current)
     
-    if node not in visited:
+        for g in graph[x, y][1:]:
+            if pos in closedlist: continue
+            if pos in openlist:
+                gNew = g + s14 if (pos[0] - node[0] + pos[1] - node[1]) % 2 else 10
+                gNeigbhbour = g[-2]
+                gNew = gCurr + gNeigbhbour
+            else:
+
+
+
+
+    
+    if node in openlist:
         visited.append(node)
         if draw: rect(node)
         improved = {}
         for neighbour in graph[node][1:]:
-            if neighbour in ((node[0], node[1] - 1), (node[0], node[1] + 1), (node[0] - 1, node[1]), (node[0] + 1, node[1])):
-                improved[g + 10 + ((neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2) * 10] = neighbour
-            else: improved[g + 14 + ((neighbour[0] - end[0])**2 + (neighbour[1] - end[1])**2) * 10] = neighbour
+            if not (neighbour[0] - node[0] + neighbour[1] - node[1]) % 2:
+                improved[g + 10 + abs(neighbour[0] - end[0]) + abs((neighbour[1] - end[1])) * 10] = neighbour
+            else: improved[g + 14 + abs(neighbour[0] - end[0]) + abs((neighbour[1] - end[1])) * 10] = neighbour
         ud = improved
         improved = dict(sorted(ud.items()))
         
         for best in improved:
-            isType = astar(graph, improved[best], end, g)
+            isType = astar(graph, improved[best], end)
             if isType:
                 return [node] + isType
         return []
@@ -106,7 +143,7 @@ def custom(graph, node):
         visited.append(node)
         if draw: rect(node)
         for neighbour in graph[node][1:]:
-            if neighbour in ((node[0], node[1] - 1), (node[0], node[1] + 1), (node[0] - 1, node[1]), (node[0] + 1, node[1])):
+            if not (neighbour[0] - node[0] + neighbour[1] - node[1]) % 2:
                 isType = custom(graph, neighbour)
                 if isType:
                     return [node] + isType
