@@ -103,29 +103,26 @@ def drawfunc(karta, func):
 
     g = makeGraph(karta)
     g = connectGraph(g)
-    algo.showSearch(True)
+    algo.drawSearch(True)
     algo.resetFlags()
     
-    #find S
-    tem = []
+    path = []
     for v in g:
         if g[v][0] == "S":
             if func == "dfs":
-                tem = algo.dfs(g, v)
+                path = algo.dfs(g, v)
                 
             elif func == "bfs":
-                tem = algo.bfs(g, v)
+                path = algo.bfs(g, v)
             elif func == "A*":
-                for vv in g:
-                    if g[vv][0] == "G":
-                        tem = algo.astar(g, v, vv)
+                path = algo.astar(g, v)
             elif func == "custom":
-                tem = algo.custom(g, v)
+                path = algo.custom(g, v)
 
-    for ss in range(len(tem)):
-        tem[ss] = (tem[ss][0] * s, tem[ss][1] * -s, 'P')
-    rect(tem)
-    return tem
+    for ss in range(len(path)):
+        path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
+    rect(path)
+    return path
 
 def timefunc(karta, func):
     g = makeGraph(karta)
@@ -133,7 +130,6 @@ def timefunc(karta, func):
     algo.drawSearch(False)
     algo.resetFlags()
     
-    #find S
     for v in g:
         if g[v][0] == "S":
             if func == "dfs":
@@ -145,12 +141,9 @@ def timefunc(karta, func):
                 algo.bfs(g, v)
                 return time.time() - start
             elif func == "A*":
-                #find G
-                for vv in g:
-                    if g[vv][0] == "G":
-                        start = time.time()
-                        algo.astar(g, v, vv)
-                        return time.time() - start
+                start = time.time()
+                algo.astar(g, v)
+                return time.time() - start
             elif func == "custom":
                 start = time.time()
                 algo.custom(g, v)

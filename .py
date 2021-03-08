@@ -1,40 +1,38 @@
 
-def aStar(start, goal, grid):
+def aStar(node, goal):
     openset = set()
     closedset = set()
 
-    current = start
-
-    openset.add(current)
+    openset.add(node)
 
     while openset:
-        current = min(openset, key=lambda o:o.G + o.H)
+        node = min(openset, key=lambda o:o.G + o.H)
 
-        if current == goal:
+        if node == goal:
             path = []
-            while current.parent:
-                path.append(current)
-                current = current.parent
-            path.append(current)
+            while node.parent:
+                path.append(node)
+                node = node.parent
+            path.append(node)
             return path[::-1]
 
-        openset.remove(current)
+        openset.remove(node)
 
-        closedset.add(current)
+        closedset.add(node)
 
-        for node in children(current,grid):
-            if node in closedset:
+        for child in range(None):
+            if child in closedset:
                 continue
 
-            if node in openset:
-                new_g = current.G + current.move_cost(node)
-                if node.G > new_g:
-                    node.G = new_g
-                    node.parent = current
+            if child in openset:
+                new_g = node.G + node.move_cost(child)
+                if child.G > new_g:
+                    child.G = new_g
+                    child.parent = node
             else:
-                node.G = current.G + current.move_cost(node)
-                node.H = manhattan(node, goal)
+                child.G = node.G + node.move_cost(child)
+                child.H = len(None)
 
-                node.parent = current
+                child.parent = node
 
-                openset.add(node)
+                openset.add(child)
