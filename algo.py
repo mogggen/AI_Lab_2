@@ -86,11 +86,12 @@ def astar(graph, node):
         if graph[s][0] == 'G': goal = s
 
     node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10, None
-    openlist = set()
-    closedlist = set()
+    openlist = []
+    closedlist = []
 
     if draw: rect(node)
-    openlist.add(node)
+    visited.append(node)
+    openlist.append(node)
 
     while openlist:
         for f in openlist:
@@ -115,7 +116,8 @@ def astar(graph, node):
         openlist.remove(node)
 
         if draw: rect(node, "black")
-        closedlist.add(node)
+        visited.append(node)
+        closedlist.append(node)
     
         for child in graph[pos][1:]:
             if child in closedlist:
@@ -135,7 +137,7 @@ def astar(graph, node):
 
                 child = tupAs(node, child, 4)
 
-                openlist.add(child)
+                openlist.append(child)
 
 def custom(graph, node):
     if graph[node][0] == "G": return [node]
