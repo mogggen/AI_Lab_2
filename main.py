@@ -122,6 +122,7 @@ def drawfunc(karta, func):
     for ss in range(len(path)):
         path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
     rect(path)
+    print(path)
     return path
 
 def timefunc(karta, func):
@@ -151,11 +152,11 @@ def timefunc(karta, func):
 
 #driver code
 itr = 1000
-for i in enumerate(kartor):
+for i in enumerate(kartor[1:]):
     print("Map " + str(i[0] + 1))
 
     #print("Depth-First-Search")
-    drawfunc(i[1], "dfs")
+    #drawfunc(i[1], "dfs")
     #input()
     
     #print("Bredth-First-Search")
@@ -163,10 +164,7 @@ for i in enumerate(kartor):
     #input()
     
     print("A*")
-    for it in range(itr):
-        start = time.time()
-        drawfunc(i[1], "A*")
-        print(time.time() - start)
+    drawfunc(i[1], "A*")
     #input()
     
     #print("custom Algorithm")

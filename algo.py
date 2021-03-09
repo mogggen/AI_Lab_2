@@ -5,7 +5,7 @@ screen = Screen()
 screen.tracer(0, 0)
 
 def tupAs(value, tup, index):
-    return tup[:index] + (value,) + tup[index + 1:]
+    return tup[:index] + (value,) + tup[index + 1:] if index >= 0 else tup[:len(tup) + index] + (value,) + tup[len(tup) + index + 1:]
 
 def rect(p, c = "gray"):
     tur = Turtle()
@@ -81,63 +81,90 @@ def bfs(graph, node):
                     return tem[::-1]
 
 def astar(graph, node):
+    global visited
     goal = ()
     for s in graph:
         if graph[s][0] == 'G': goal = s
 
-    node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10, None
+    node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10, -1
     openlist = []
     closedlist = []
 
     if draw: rect(node)
-    visited.append(node)
     openlist.append(node)
 
     while openlist:
         for f in openlist:
             if node[2] + node[3] > f[2] + f[3]:
                 node = f
-                #nodeIndex = f[0]
 
         pos = node[:2]
         g = node[2]
         #h = node[3]
-        par = node[4]
+        #visited = node[4]
 
         if pos == goal:
             path = []
-            while par:
+            while node[4] != -1:
                 path.append(pos)
-                node = par
+                node = visited[node[4]]
             path.append(pos)
             return path[::-1]
         
-        print(openlist)
         openlist.remove(node)
 
         if draw: rect(node, "black")
         visited.append(node)
         closedlist.append(node)
-    
+
+
         for child in graph[pos][1:]:
-            if child in closedlist:
-                continue
+            Found = False
 
-            if child in openlist:
-                gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
-                if child[2] > gNew:
-                    child = tupAs(gNew, child, 2)
-                    child = tupAs(node, child, 4)
-            else:
-                gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
-                hNew = (abs(goal[0] - child[0]) + abs(goal[1] - child[1])) * 10
+            #never updated
+            for c in range(len(closedlist)):
+                if closedlist[c][:2] == node[:2]:
+                    Found = True
+                    break
+            if Found: continue
+
+            #update in list
+            for c in range(len(openlist)):
+                diag = (14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
+                t = openlist[c]
+
+                if t[:2] == node[:2] and t[2] > g + diag:
+                    openlist[c] = t[0], t[1], g + diag, t[3], c
+                    Found = True
+                    break
+            if Found: continue
+
+            #append to list
+            for c in range(len(openlist)):
+                diag = (14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
+                dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
+                t = openlist[c]
+
+                if t[:2] == node[:2]:
+                    t = t[0], t[1], g + diag, dist, c
+                    openlist.append(openlist[c])
                 
-                child = tupAs(gNew, child, 2)
-                child = tupAs(hNew, child, 3)
+            
+            # if child in closedlist:
+            #     continue
 
-                child = tupAs(node, child, 4)
+            # if child in openlist:
+            #     gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
+            #     if child[2] > gNew:
+            #         child = tupAs(gNew, child, 2)
+            # else:
+            #     gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
+            #     hNew = (abs(goal[0] - child[0]) + abs(goal[1] - child[1])) * 10
+                
+            #     child = tupAs(gNew, child, 2)
+            #     child = tupAs(hNew, child, 3)
 
-                openlist.append(child)
+            #     openlist.append(child)
 
 def custom(graph, node):
     if graph[node][0] == "G": return [node]
