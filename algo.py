@@ -81,40 +81,32 @@ def bfs(graph, node):
                     return tem[::-1]
 
 def astar(graph, node):
-    global visited
-    goal = ()
-    for s in graph:
-        if graph[s][0] == 'G': goal = s
+    bestParent = {node: []} # current: all parent (pos, f)
+    goal = [goal for goal in graph if graph[goal][0] == "G"][0]
 
-    node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10, -1
-    openlist = []
+    node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10
+    openlist = [node]
     closedlist = []
-
-    if draw: rect(node)
-    openlist.append(node)
 
     while openlist:
         for f in openlist:
-            if node[2] + node[3] > f[2] + f[3]:
+            if node[2] + node[3] >= f[2] + f[3]:
                 node = f
+                openlist.remove(f)
+                break
 
         pos = node[:2]
         g = node[2]
-        #h = node[3]
-        #visited = node[4]
 
         if pos == goal:
             path = []
-            while node[4] != -1:
-                path.append(pos)
-                node = visited[node[4]]
-            path.append(pos)
+            while bestParent[node[:2]]:
+                path.append(node[:2])
+                node = bestParent[node[:2]][0][:2]
+            path.append(node[:2])
             return path[::-1]
-        
-        openlist.remove(node)
 
         if draw: rect(node, "black")
-        visited.append(node)
         closedlist.append(node)
 
 
@@ -123,48 +115,31 @@ def astar(graph, node):
 
             #never updated
             for c in range(len(closedlist)):
-                if closedlist[c][:2] == node[:2]:
+                if closedlist[c][:2] == child:
                     Found = True
                     break
             if Found: continue
 
             #update in list
             for c in range(len(openlist)):
-                diag = (14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
                 t = openlist[c]
+                diag = 10#(14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
 
-                if t[:2] == node[:2] and t[2] > g + diag:
-                    openlist[c] = t[0], t[1], g + diag, t[3], c
+                if t[:2] == child:
+                    if t[2] > g + diag:
+                        openlist[c] = t[0], t[1], g + diag, t[3]
+                        bestParent[node[:2]] += (t[:2], g + diag + t[3])
                     Found = True
                     break
             if Found: continue
 
             #append to list
-            for c in range(len(openlist)):
-                diag = (14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
-                dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
-                t = openlist[c]
-
-                if t[:2] == node[:2]:
-                    t = t[0], t[1], g + diag, dist, c
-                    openlist.append(openlist[c])
-                
-            
-            # if child in closedlist:
-            #     continue
-
-            # if child in openlist:
-            #     gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
-            #     if child[2] > gNew:
-            #         child = tupAs(gNew, child, 2)
-            # else:
-            #     gNew = g + (14 if ((pos[0] - child[0]) + (pos[1] - child[1])) % 2 else 10)
-            #     hNew = (abs(goal[0] - child[0]) + abs(goal[1] - child[1])) * 10
-                
-            #     child = tupAs(gNew, child, 2)
-            #     child = tupAs(hNew, child, 3)
-
-            #     openlist.append(child)
+            t = child
+            diag = 10#14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
+            dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
+            t += g + diag, dist
+            openlist.append(t)
+                    
 
 def custom(graph, node):
     if graph[node][0] == "G": return [node]

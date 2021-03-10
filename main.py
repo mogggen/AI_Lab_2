@@ -118,6 +118,7 @@ def drawfunc(karta, func):
                 path = algo.astar(g, v)
             elif func == "custom":
                 path = algo.custom(g, v)
+            break
 
     for ss in range(len(path)):
         path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
