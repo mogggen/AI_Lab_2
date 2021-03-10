@@ -110,20 +110,23 @@ def drawfunc(karta, func):
     for v in g:
         if g[v][0] == "S":
             if func == "dfs":
+                print("Depth-First-Search")
                 path = algo.dfs(g, v)
-                
             elif func == "bfs":
+                print("Bredth-First-Search")
                 path = algo.bfs(g, v)
             elif func == "A*":
+                print("A*")
                 path = algo.astar(g, v)
             elif func == "custom":
+                print("custom Algorithm")
                 path = algo.custom(g, v)
             break
 
     for ss in range(len(path)):
         path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
     rect(path)
-    print(path)
+    input()
     return path
 
 def timefunc(karta, func):
@@ -153,24 +156,12 @@ def timefunc(karta, func):
 
 #driver code
 itr = 1000
-for i in enumerate(kartor[1:]):
+for i in enumerate(kartor):
     print("Map " + str(i[0] + 1))
-
-    #print("Depth-First-Search")
     #drawfunc(i[1], "dfs")
-    #input()
-    
-    #print("Bredth-First-Search")
     #drawfunc(i[1], "bfs")
-    #input()
-    
-    print("A*")
     drawfunc(i[1], "A*")
-    #input()
-    
-    #print("custom Algorithm")
     #drawfunc(i[1], "custom")
-    #input()
 
     dfsTime = 0
     bfsTime = 0

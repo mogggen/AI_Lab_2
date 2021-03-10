@@ -81,7 +81,7 @@ def bfs(graph, node):
                     return tem[::-1]
 
 def astar(graph, node):
-    bestParent = {node: []} # current: all parent (pos, f)
+    bestParent = {} # current: all parent (pos, f)
     goal = [goal for goal in graph if graph[goal][0] == "G"][0]
 
     node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10
@@ -93,22 +93,15 @@ def astar(graph, node):
             if node[2] + node[3] >= f[2] + f[3]:
                 node = f
                 openlist.remove(f)
+                bestParent[node[:2]] = []
+                if draw: rect(node, "turquoise")
                 break
 
         pos = node[:2]
         g = node[2]
 
-        if pos == goal:
-            path = []
-            while bestParent[node[:2]]:
-                path.append(node[:2])
-                node = bestParent[node[:2]][0][:2]
-            path.append(node[:2])
-            return path[::-1]
-
-        if draw: rect(node, "black")
+        if draw: rect(node, "pink")
         closedlist.append(node)
-
 
         for child in graph[pos][1:]:
             Found = False
@@ -123,22 +116,34 @@ def astar(graph, node):
             #update in list
             for c in range(len(openlist)):
                 t = openlist[c]
-                diag = 10#(14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
+                diag = 10
+                #diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
 
                 if t[:2] == child:
                     if t[2] > g + diag:
                         openlist[c] = t[0], t[1], g + diag, t[3]
-                        bestParent[node[:2]] += (t[:2], g + diag + t[3])
+                        bestParent[node[:2]] += (t[0], t[1], g + diag + t[3])
                     Found = True
                     break
             if Found: continue
 
             #append to list
             t = child
-            diag = 10#14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10)
+            diag = 10
+            #diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
             dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
             t += g + diag, dist
             openlist.append(t)
+            bestParent[node[:2]] += [(t[0], t[1], g + diag + dist)]
+            
+            if pos == goal:
+                path = []
+                while bestParent[node[:2]]:
+                    path.append(node[:2])
+                    node = bestParent[node[:2]][0][:2]
+                path.append(node[:2])
+                input(bestParent)
+                return path[::-1]
                     
 
 def custom(graph, node):
