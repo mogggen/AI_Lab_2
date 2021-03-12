@@ -108,6 +108,15 @@ def astar(graph, node):
 
             #never updated
             for c in range(len(closedlist)):
+                if child == goal and goal in closedlist[c][:2]:
+                    path = []
+                    bestParent[pos] = [(pos[0], pos[1], sum(pos[2:]))]
+                    while bestParent[node[:2]]:
+                        path.append(node[:2])
+                        node = bestParent[node[:2]][0][:2]
+                    path.append(node[:2])
+                    #input(bestParent)
+                    return path[::-1]
                 if closedlist[c][:2] == child:
                     Found = True
                     break
@@ -117,9 +126,10 @@ def astar(graph, node):
             for c in range(len(openlist)):
                 t = openlist[c]
                 diag = 10
-                #diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
-
+                diag = 10 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 14
+                
                 if t[:2] == child:
+                    print("x", abs(pos[0] - t[0]), "y", abs(pos[1] - t[1]),"g: ", diag)
                     if t[2] > g + diag:
                         openlist[c] = t[0], t[1], g + diag, t[3]
                         bestParent[node[:2]] += (t[0], t[1], g + diag + t[3])
@@ -130,20 +140,13 @@ def astar(graph, node):
             #append to list
             t = child
             diag = 10
-            #diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
+            diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
+            #print("x", abs(pos[0] - t[0]), "y", abs(pos[1] - t[1]),"g: ", diag)
             dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
             t += g + diag, dist
             openlist.append(t)
+            rect(t, "turquoise")
             bestParent[node[:2]] += [(t[0], t[1], g + diag + dist)]
-            
-            if pos == goal:
-                path = []
-                while bestParent[node[:2]]:
-                    path.append(node[:2])
-                    node = bestParent[node[:2]][0][:2]
-                path.append(node[:2])
-                input(bestParent)
-                return path[::-1]
                     
 
 def custom(graph, node):
