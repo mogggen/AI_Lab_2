@@ -110,12 +110,11 @@ def astar(graph, node):
             for c in range(len(closedlist)):
                 if child == goal and goal in closedlist[c][:2]:
                     path = []
-                    bestParent[pos] = [(pos[0], pos[1], sum(pos[2:]))]
+                    bestParent[child] = [(pos[0], pos[1], sum(pos[2:]))]
                     while bestParent[node[:2]]:
                         path.append(node[:2])
                         node = bestParent[node[:2]][0][:2]
                     path.append(node[:2])
-                    #input(bestParent)
                     return path[::-1]
                 if closedlist[c][:2] == child:
                     Found = True
@@ -125,11 +124,9 @@ def astar(graph, node):
             #update in list
             for c in range(len(openlist)):
                 t = openlist[c]
-                diag = 10
                 diag = 10 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 14
                 
                 if t[:2] == child:
-                    print("x", abs(pos[0] - t[0]), "y", abs(pos[1] - t[1]),"g: ", diag)
                     if t[2] > g + diag:
                         openlist[c] = t[0], t[1], g + diag, t[3]
                         bestParent[node[:2]] += (t[0], t[1], g + diag + t[3])
@@ -139,9 +136,7 @@ def astar(graph, node):
 
             #append to list
             t = child
-            diag = 10
-            diag = 14 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 10
-            #print("x", abs(pos[0] - t[0]), "y", abs(pos[1] - t[1]),"g: ", diag)
+            diag = 10 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 14
             dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
             t += g + diag, dist
             openlist.append(t)
@@ -156,7 +151,7 @@ def custom(graph, node):
         visited.append(node)
         if draw: rect(node)
         for neighbour in graph[node][1:]:
-            if not (neighbour[0] - node[0] + neighbour[1] - node[1]) % 2:
+            if not ((neighbour[0] - node[0]) + (neighbour[1] - node[1])) % 2:
                 isType = custom(graph, neighbour)
                 if isType:
                     return [node] + isType
