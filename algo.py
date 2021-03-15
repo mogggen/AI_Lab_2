@@ -151,7 +151,7 @@ def custom(graph, node):
         visited.append(node)
         if draw: rect(node)
         for neighbour in graph[node][1:]:
-            if not ((neighbour[0] - node[0]) + (neighbour[1] - node[1])) % 2:
+            if ((neighbour[0] - node[0]) + (neighbour[1] - node[1])) % 2:
                 isType = custom(graph, neighbour)
                 if isType:
                     return [node] + isType
