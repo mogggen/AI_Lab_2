@@ -4,9 +4,6 @@ s = 10
 screen = Screen()
 screen.tracer(0, 0)
 
-def tupAs(value, tup, index):
-    return tup[:index] + (value,) + tup[index + 1:] if index >= 0 else tup[:len(tup) + index] + (value,) + tup[len(tup) + index + 1:]
-
 def rect(p, c = "gray"):
     tur = Turtle()
     
@@ -80,68 +77,87 @@ def bfs(graph, node):
                         temp = temp[2]
                     return tem[::-1]
 
-def astar(graph, node):
-    bestParent = {} # current: all parent (pos, f)
-    goal = [goal for goal in graph if graph[goal][0] == "G"][0]
+class Node:
+    
+    def __init__(self, pos):
+        self.x, self.y = pos
+        self.parent = None
+        self.g = 0
+        self.h = 0
 
-    node += 0, (abs(goal[0] - node[0]) + abs(goal[1] - node[1])) * 10
+        self.Neighbours = []
+
+    def __eq__(self, o):
+        return (self.x, self.y) == (o.x, o.y)
+
+    def __ne__(self, o):
+        return (self.x, self.y) != (o.x, o.y)
+
+    def setNeighbours(self, graph):
+        if self.Neighbours: return
+        for n in graph[self.x, self.y][1:]:
+            self.Neighbours += [Node(n)]
+
+    
+def astar(graph, node):
+    goal = Node([goal for goal in graph if graph[goal][0] == "G"][0])
+    node = Node(node)
+    node.g, Node.h = 0, -1
     openlist = [node]
     closedlist = []
 
     while openlist:
-        for f in openlist:
-            if node[2] + node[3] >= f[2] + f[3]:
-                node = f
-                openlist.remove(f)
-                bestParent[node[:2]] = []
-                if draw: rect(node, "turquoise")
-                break
+        node = min(openlist, key=lambda o: o.g + o.h)
+        if node == goal:
+            path = []
+            while node.parent:
+                path.append((node.x, node.y))
+                node = node.parent
+            path.append((node.x, node.y))
+            return path[::-1]
 
-        pos = node[:2]
-        g = node[2]
-
-        if draw: rect(node, "pink")
+        openlist.remove(node)
         closedlist.append(node)
-
-        for child in graph[pos][1:]:
+        
+        if draw: rect((node.x, node.y), "pink")
+        node.setNeighbours(graph)
+        
+        for child in node.Neighbours:
             Found = False
 
-            #never updated
-            for c in range(len(closedlist)):
-                if child == goal and goal in closedlist[c][:2]:
-                    path = []
-                    bestParent[child] = [(pos[0], pos[1], sum(pos[2:]))]
-                    while bestParent[node[:2]]:
-                        path.append(node[:2])
-                        node = bestParent[node[:2]][0][:2]
-                    path.append(node[:2])
-                    return path[::-1]
-                if closedlist[c][:2] == child:
-                    Found = True
+
+            #append to list
+            for other in closedlist:
+                if child == other:
+                    continue
+                else: 
+                    Found += 1
+                    if Found > 1: print("dö")
                     break
             if Found: continue
 
             #update in list
-            for c in range(len(openlist)):
-                t = openlist[c]
-                diag = 10 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 14
-                
-                if t[:2] == child:
-                    if t[2] > g + diag:
-                        openlist[c] = t[0], t[1], g + diag, t[3]
-                        bestParent[node[:2]] += (t[0], t[1], g + diag + t[3])
+            for other in openlist:
+                if child == other:
+                    diag = 10 if ((node.x - child.x) + (node.y - child.y)) % 2 else 14
+                    if child.g < node.g + diag:
+                        child.g = node.g + diag
+                        other.g = node.g + diag
+                        child.parent = node
+                        other.parent = node
                     Found = True
                     break
             if Found: continue
-
-            #append to list
-            t = child
-            diag = 10 if ((pos[0] - t[0]) + (pos[1] - t[1])) % 2 else 14
-            dist = (abs(goal[0] - t[0]) + abs(goal[1] - t[1])) * 10
-            t += g + diag, dist
-            openlist.append(t)
-            rect(t, "turquoise")
-            bestParent[node[:2]] += [(t[0], t[1], g + diag + dist)]
+            
+            
+            
+            if not Found:
+                diag = 10 if ((node.x - child.x) + (node.y - child.y)) % 2 else 14
+                dist = ((goal.x - node.x)**2 + (goal.y - node.y)**2)
+                child.g, child.h, child.parent = node.g + diag, dist, node
+                
+                openlist.append(child)
+                if draw: rect((child.x, child.y), "turquoise")
                     
 
 def custom(graph, node):
