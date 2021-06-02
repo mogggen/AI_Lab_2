@@ -6,28 +6,29 @@ s = 10
 screen = Screen()
 screen.tracer(0, 0)
 
-#destination
+
+# destination
 def rect(p):
     tur = Turtle()
-    
-    #setters
+
+    # setters
     tur.ht()
     tur.up()
     tur.speed(0)
-    for i in p:        
+    for i in p:
         if i[2] in (" ", "0"): continue
         x = i[0]
         y = i[1]
-        
-        #continue
+
+        # continue
         tur.fillcolor(getColor(i[2]))
 
-        #position
+        # position
         tur.goto(x - s / 2, y - s / 2)
 
-        #fill rec
+        # fill rec
         tur.begin_fill()
-        
+
         tur.setx(x + s / 2)
         tur.sety(y + s / 2)
         tur.setx(x - s / 2)
@@ -35,11 +36,13 @@ def rect(p):
         tur.end_fill()
     screen.update()
 
+
 foo = open("Map1.txt", 'r')
 
 ofo = open("Map2.txt", 'r')
 oof = open("Map3.txt", 'r')
 kartor = foo.read(), ofo.read(), oof.read()
+
 
 def getColor(c):
     if c == 'X':
@@ -53,12 +56,13 @@ def getColor(c):
     else:
         return "Unknown token"
 
+
 def drawMap(karta):
     global s
     nodes = []
     x = 0
     y = 0
-    
+
     for c in karta:
         if c == '\n':
             x = 0
@@ -68,11 +72,12 @@ def drawMap(karta):
             x += s
     return nodes
 
+
 def makeGraph(karta):
     graph = {}
     x = 0
     y = 0
-    #create grid
+    # create grid
     for k in karta:
         if k == '\n':
             x = 0
@@ -82,19 +87,22 @@ def makeGraph(karta):
             x += 1
     return graph
 
+
 def connectGraph(graph):
     r = ((1, 1), (0, 1), (1, 0), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1))
-    
+
     for g in graph:
         for n in r:
             try:
-                if "X" not in (graph[g[0] + n[0], g[1]][0], graph[g[0], g[1] + n[1]][0], graph[g[0] + n[0], g[1] + n[1]][0]):
+                if "X" not in (
+                        graph[g[0] + n[0], g[1]][0], graph[g[0], g[1] + n[1]][0], graph[g[0] + n[0], g[1] + n[1]][0]):
                     graph[g] += [(g[0] + n[0], g[1] + n[1])]
             except KeyError:
                 continue
     return graph
 
-def drawfunc(karta, func):
+
+def drawfunc(karta):
     global screen
     screen.clear()
     screen.tracer(0, 0)
@@ -105,22 +113,11 @@ def drawfunc(karta, func):
     g = connectGraph(g)
     algo.drawSearch(True)
     algo.resetFlags()
-    
+
     path = []
     for v in g:
         if g[v][0] == "S":
-            if func == "dfs":
-                print("Depth-First-Search")
-                path = algo.dfs(g, v)
-            elif func == "bfs":
-                print("Bredth-First-Search")
-                path = algo.bfs(g, v)
-            elif func == "A*":
-                print("A*")
-                path = algo.astar(g, v)
-            elif func == "custom":
-                print("custom Algorithm")
-                path = algo.custom(g, v)
+            path = algo.astar(g, v)
             break
 
     for ss in range(len(path)):
@@ -129,54 +126,10 @@ def drawfunc(karta, func):
     input()
     return path
 
-def timefunc(karta, func):
-    g = makeGraph(karta)
-    g = connectGraph(g)
-    algo.drawSearch(False)
-    algo.resetFlags()
-    
-    for v in g:
-        if g[v][0] == "S":
-            if func == "dfs":
-                start = time.time()
-                algo.dfs(g, v)
-                return time.time() - start
-            elif func == "bfs":
-                start = time.time()
-                algo.bfs(g, v)
-                return time.time() - start
-            elif func == "A*":
-                start = time.time()
-                algo.astar(g, v)
-                return time.time() - start
-            elif func == "custom":
-                start = time.time()
-                algo.custom(g, v)
-                return time.time() - start
 
-#driver code
+# driver code
 itr = 1000
 for i in enumerate(kartor):
     print("Map " + str(i[0] + 1))
-    #drawfunc(i[1], "dfs")
-    #drawfunc(i[1], "bfs")
-    drawfunc(i[1], "A*")
-    #drawfunc(i[1], "custom")
-
-    dfsTime = 0
-    bfsTime = 0
-    AstarTime = 0
-    customTime = 0
-
-    for it in range(itr):
-        break
-        dfsTime += timefunc(i[1], "dfs")
-        bfsTime += timefunc(i[1], "bfs")
-        AstarTime += timefunc(i[1], "A*")
-        customTime += timefunc(i[1], "custom")
-    
-    #print(dfsTime / itr)
-    #print(bfsTime / itr)
-    #print(AstarTime / itr)
-    #print(customTime / itr)
-    #input()
+    drawfunc(i[1])
+    # input()
