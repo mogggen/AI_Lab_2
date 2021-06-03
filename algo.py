@@ -1,4 +1,5 @@
 from turtle import Turtle, Screen
+from time import time
 
 s = 10
 screen = Screen()
@@ -34,59 +35,82 @@ def rect(p, c="gray"):
     return x, y
 
 
-# flags
-draw = False
-visited = []
-closed = []
-
-
-def resetFlags():
-    global visited
-    visited = []
-
-
-def drawSearch(boolean):
-    global draw
-    draw = boolean
-
-
 class Node:
-    def __init__(self, pos):
-        self.pos = pos
-
-        self.g = 0
-        self.h = 0
+    def __init__(self, h=None, neighbours=None):
+        self.g = None
+        self.h = h
         self.opened = False
         self.closed = False
+        self.neighbours = neighbours
         self.parent = None
 
 
-def astar(graph, node):
-    if not graph or node not in graph:
-        return []
+def convertGraphToNodes(graph):
+    if not graph:
+        return
+    finish = None
+    nodeList = {}
+    for g in graph:
+        if graph[g][0] == 'G':
+            nodeList[g] = Node(0, graph[g][1:])
+            finish = g
+            break
 
+    for g in graph:
+        if graph[g][0] == 'S':
+            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5), 1), graph[g][1:])
+            nodeList[g].g = 0
+            nodeList[g].opened = True
+
+        if graph[g][0] == ' ':
+            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5), 1), graph[g][1:])
+
+    return nodeList
+
+def moveCost(parent, child):
+    return 14 if ((parent[0] - child[0]) + (parent[1] - child[1])) % 2 == 0 else 10
+
+def astar(graph, outOfTime, openList=[]):
     isRunning = True
-    node.opened = True
-    best = node
+    node = 1, 1
+    graph[node].opened = True
 
     while isRunning:
         # set loop flag
         isRunning = False
+        # openList = []
         for n in graph:
-            if n.opened:
+            if graph[n].opened:
+                if graph[node].g + graph[node].h < graph[n].g + graph[n].h:
+                    node = n
+                # openList.append(n)
                 isRunning = True
-                if n.g + n.h <= best.g + best.h:
-                    best = n
 
         # return final path
-        if node.h == 0:
+        if graph[node].h == 0:# or time() > outOfTime:
             path = [node]
-            while node.parent:
-                path.append(node.parent)
-                node = node.parent
+            while graph[node].parent:
+                path.append(graph[node].parent)
+                node = graph[node].parent
             return path
 
-        # if closed
+        graph[node].opened = False
 
+        graph[node].closed = True
 
-    rect((child.x, child.y), "turquoise")
+        rect(node)
+
+        for n in graph[node].neighbours:
+            if graph[n].closed:
+                continue
+
+            if graph[n].opened:
+                if graph[node].g and graph[n].g > graph[node].g + moveCost(node, n):
+                    print(graph[node].g, graph[n].g, "stuck here!")
+                    graph[n].g = graph[node].g + moveCost(node, n)
+                    graph[n].parent = node
+
+            else:
+                graph[n].g = graph[node].g + moveCost(node, n)
+                graph[n].parent = node
+                graph[n].opened = True

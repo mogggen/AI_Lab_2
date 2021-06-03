@@ -1,6 +1,6 @@
 import algo
 from turtle import Turtle, Screen
-import time
+from time import time
 
 s = 10
 screen = Screen()
@@ -111,19 +111,18 @@ def drawfunc(karta):
 
     g = makeGraph(karta)
     g = connectGraph(g)
-    algo.drawSearch(True)
-    algo.resetFlags()
+    g = algo.convertGraphToNodes(g)
 
     path = []
-    for v in g:
-        if g[v][0] == "S":
-            path = algo.astar(g, v)
-            break
 
-    for ss in range(len(path)):
-        path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
-    rect(path)
-    input()
+    while True:
+        outOfTime = time() + .1
+        path = algo.astar(g, outOfTime)
+
+        for ss in range(len(path)):
+            path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
+        rect(path)
+        print(path)
     return path
 
 
