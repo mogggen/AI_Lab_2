@@ -58,17 +58,19 @@ def convertGraphToNodes(graph):
 
     for g in graph:
         if graph[g][0] == 'S':
-            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5), 1), graph[g][1:])
+            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
             nodeList[g].g = 0
             nodeList[g].opened = True
 
         if graph[g][0] == ' ':
-            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5), 1), graph[g][1:])
+            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
 
     return nodeList
 
+
 def moveCost(parent, child):
     return 14 if ((parent[0] - child[0]) + (parent[1] - child[1])) % 2 == 0 else 10
+
 
 def astar(graph, outOfTime, openList=[]):
     isRunning = True
@@ -81,8 +83,9 @@ def astar(graph, outOfTime, openList=[]):
         # openList = []
         for n in graph:
             if graph[n].opened:
-                if graph[node].g + graph[node].h < graph[n].g + graph[n].h:
+                if not graph[node].g or graph[n].g + graph[n].h <= graph[node].g + graph[node].h:
                     node = n
+                    graph[node].opened = True
                 # openList.append(n)
                 isRunning = True
 
@@ -97,20 +100,24 @@ def astar(graph, outOfTime, openList=[]):
         graph[node].opened = False
 
         graph[node].closed = True
+        rect(node, "yellow")
 
-        rect(node)
-
+        #print(graph[node].g, graph[node].h, graph[node].neighbours)
+        input()
         for n in graph[node].neighbours:
             if graph[n].closed:
+                rect(n, "black")
                 continue
 
             if graph[n].opened:
-                if graph[node].g and graph[n].g > graph[node].g + moveCost(node, n):
+                print("kill me here!")
+                if not graph[node].g or graph[n].g > graph[node].g + moveCost(node, n):
                     print(graph[node].g, graph[n].g, "stuck here!")
                     graph[n].g = graph[node].g + moveCost(node, n)
                     graph[n].parent = node
 
             else:
+                rect(n)
                 graph[n].g = graph[node].g + moveCost(node, n)
                 graph[n].parent = node
                 graph[n].opened = True
