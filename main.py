@@ -116,7 +116,7 @@ def drawfunc(karta):
     path = []
 
     while True:
-        outOfTime = time() + 5
+        outOfTime = time() + .1
         path = algo.astar(g, outOfTime)
 
         for ss in range(len(path)):

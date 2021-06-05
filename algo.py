@@ -75,6 +75,7 @@ def moveCost(parent, child):
 def astar(graph, outOfTime, openList=[]):
     isRunning = True
     node = 1, 1
+    print(id(graph))
     graph[node].opened = True
 
     while isRunning:
@@ -83,14 +84,14 @@ def astar(graph, outOfTime, openList=[]):
         # openList = []
         for n in graph:
             if graph[n].opened:
-                if not graph[node].g or graph[n].g + graph[n].h <= graph[node].g + graph[node].h:
+                if graph[node].g or graph[n].g + graph[n].h <= graph[node].g + graph[node].h:
                     node = n
                     graph[node].opened = True
                 # openList.append(n)
                 isRunning = True
 
         # return final path
-        if graph[node].h == 0:# or time() > outOfTime:
+        if graph[node].h == 0 or time() > outOfTime:
             path = [node]
             while graph[node].parent:
                 path.append(graph[node].parent)
@@ -100,19 +101,14 @@ def astar(graph, outOfTime, openList=[]):
         graph[node].opened = False
 
         graph[node].closed = True
-        rect(node, "yellow")
 
-        #print(graph[node].g, graph[node].h, graph[node].neighbours)
-        input()
         for n in graph[node].neighbours:
             if graph[n].closed:
                 rect(n, "black")
                 continue
 
             if graph[n].opened:
-                print("kill me here!")
-                if not graph[node].g or graph[n].g > graph[node].g + moveCost(node, n):
-                    print(graph[node].g, graph[n].g, "stuck here!")
+                if graph[n].g < graph[node].g + moveCost(node, n):
                     graph[n].g = graph[node].g + moveCost(node, n)
                     graph[n].parent = node
 
