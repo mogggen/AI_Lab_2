@@ -89,7 +89,7 @@ def makeGraph(karta):
 
 
 def connectGraph(graph):
-    r = ((1, 1), (0, 1), (1, 0), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1))
+    r = ((1, 1), (1, 0), (0, 1), (-1, 1), (1, -1), (-1, 0), (0, -1), (-1, -1))
 
     for g in graph:
         for n in r:
@@ -103,7 +103,6 @@ def connectGraph(graph):
 
 
 def drawfunc(karta):
-    global screen
     screen.clear()
     screen.tracer(0, 0)
     rect(drawMap(karta))
@@ -116,14 +115,14 @@ def drawfunc(karta):
     path = []
 
     while True:
-        outOfTime = time() + .1
+        outOfTime = time() + 5
         path = algo.astar(g, outOfTime)
 
         for ss in range(len(path)):
             path[ss] = (path[ss][0] * s, path[ss][1] * -s, 'P')
         rect(path)
         print(path)
-    return path
+        break
 
 
 # driver code

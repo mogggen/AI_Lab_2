@@ -52,18 +52,14 @@ def convertGraphToNodes(graph):
     nodeList = {}
     for g in graph:
         if graph[g][0] == 'G':
-            nodeList[g] = Node(0, graph[g][1:])
             finish = g
             break
 
     for g in graph:
+        nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
         if graph[g][0] == 'S':
-            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
             nodeList[g].g = 0
             nodeList[g].opened = True
-
-        if graph[g][0] == ' ':
-            nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
 
     return nodeList
 
@@ -75,7 +71,7 @@ def moveCost(parent, child):
 def astar(graph, outOfTime, openList=[]):
     isRunning = True
     node = 1, 1
-    print(id(graph))
+
     graph[node].opened = True
 
     while isRunning:
@@ -91,7 +87,8 @@ def astar(graph, outOfTime, openList=[]):
                 isRunning = True
 
         # return final path
-        if graph[node].h == 0 or time() > outOfTime:
+        if graph[node].h == 0:# or time() > outOfTime:
+            isRunning = False
             path = [node]
             while graph[node].parent:
                 path.append(graph[node].parent)
