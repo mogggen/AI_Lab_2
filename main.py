@@ -50,9 +50,9 @@ def getColor(c):
         return "blue"
     elif c == 'S':
         return "red"
-    elif c == 'G':
-        return "green"
     elif c == 'P':
+        return "green"
+    elif c == 'G':
         return "yellow"
     else:
         return "Unknown token"
