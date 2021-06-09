@@ -49,46 +49,49 @@ def convertGraphToNodes(graph):
     if not graph:
         return
     finish = None
-    nodeList = {}
+    node_list = {}
     for g in graph:
         if graph[g][0] == 'G':
             finish = g
             break
 
     for g in graph:
-        nodeList[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
+        node_list[g] = Node(round((((finish[0] - g[0]) ** 2 + (finish[1] - g[1]) ** 2) ** .5) * 10), graph[g][1:])
         if graph[g][0] == 'S':
-            nodeList[g].g = 0
-            nodeList[g].opened = True
+            node_list[g].g = 0
+            node_list[g].opened = True
 
-    return nodeList
+    return node_list
 
 
 def moveCost(parent, child):
     return 14 if ((parent[0] - child[0]) + (parent[1] - child[1])) % 2 == 0 else 10
 
 
-def astar(graph, outOfTime, openList=[]):
-    isRunning = True
+def astar(graph, outOfTime, open_list=0):
+    is_running = True
     node = 1, 1
 
     graph[node].opened = True
 
-    while isRunning:
+    while is_running:
         # set loop flag
-        isRunning = False
-        # openList = []
+        is_running = False
         for n in graph:
-            if graph[n].opened:
+            if graph[n].opened and not graph[n].closed:
                 if graph[node].g or graph[n].g + graph[n].h <= graph[node].g + graph[node].h:
                     node = n
                     graph[node].opened = True
-                # openList.append(n)
-                isRunning = True
+                    open_list += 1
+                    is_running = True
+            if graph[n].closed and not graph[n].opened:
+                open_list -= 1
+
+        input(open_list)
 
         # return final path
-        if graph[node].h == 0:# or time() > outOfTime:
-            isRunning = False
+        if graph[node].h == 0:
+            is_running = False
             path = [node]
             while graph[node].parent:
                 path.append(graph[node].parent)

@@ -41,7 +41,8 @@ foo = open("Map1.txt", 'r')
 
 ofo = open("Map2.txt", 'r')
 oof = open("Map3.txt", 'r')
-kartor = foo.read(), ofo.read(), oof.read()
+fof = open("Map4.txt", 'r')
+kartor = foo.read(), ofo.read(), oof.read(), fof.read()
 
 
 def getColor(c):
@@ -94,11 +95,10 @@ def connectGraph(graph):
     for g in graph:
         for n in r:
             try:
-                if "X" not in (
-                        graph[g[0] + n[0], g[1]][0], graph[g[0], g[1] + n[1]][0], graph[g[0] + n[0], g[1] + n[1]][0]):
+                if graph[g[0] + n[0], g[1] + n[1]][0] != "X":
                     graph[g] += [(g[0] + n[0], g[1] + n[1])]
             except KeyError:
-                continue
+                pass
     return graph
 
 
@@ -126,8 +126,7 @@ def drawfunc(karta):
 
 
 # driver code
-itr = 1000
-for i in enumerate(kartor):
+for i in enumerate(kartor[:]):
     print("Map " + str(i[0] + 1))
     drawfunc(i[1])
-    # input()
+    input()
